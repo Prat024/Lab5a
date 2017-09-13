@@ -1,0 +1,183 @@
+Lab 5a - Hive Practice Commands
+
+1) Enter Hive terminal 
+hive
+
+2) Exit Hive terminal
+quit;
+
+3) Create empinfo file locally
+cat > Empinfo
+100	mike	5000
+101	john	10000
+102	Henry	15000	
+103	smith	20000
+
+4) Create Tables
+> create table Emp(empid int, empname string, empsal float)
+> row format delimited
+> fields terminated by '\t';
+
+5) Upload file
+load data local inpath '/home/cloudera/Empinfo' into table emp
+
+6) Description of table
+desc emp;
+
+# Output:
+empind int
+empname string
+empsal float
+
+7) View all elements in Hive table
+select * from emp;
+
+# Output:
+100	mike	5000.0
+101	john	10000.0
+102	Henry	15000.0	
+103	smith	20000.0
+
+8) View employee with salary above 10,000
+select * from emp WHERE empsal>10000
+
+# Output:
+102	Henry	15000.0
+103	smith	20000.0
+
+9) View employee id and salary with name John
+select empid, empsal from emp WHERE empname="John";
+
+# Output:
+101	10000.0
+
+10) View a employee with salary > 20000
+select * from emp WHERE empsal>20000;
+
+# Output: #NULL since no employee has over 20,000 salary
+
+11) Remove table
+drop table emp;
+select * from emp;
+
+# Output: #Sucessfully removed
+FAILED: SemanticException [Error 10001]: Line 1:14 Table not found 'emp'
+
+12) Create external table without location
+create external table student(stuid int, stuname string, stumarks int)
+row format delimited
+fields terminated by '\t';
+
+13) Create table
+cat > studentinfo
+10	Albert	48
+11	Bevin	64
+12	Charles	95
+13	David	72
+14	Elliot	56
+
+14) Load file into student table
+load data local inpath '/home/cloudera/studentinfo' into table student;
+
+15) View all students
+select * from student;
+
+# Output:
+10	Albert	48
+11	Bevin	64
+12	Charles	95
+13	David	72
+14	Elliot	56
+
+16) View students above 60 marks
+select * from student WHERE stumarks>60;
+
+# Output:
+11	Bevin	64
+12	Charles	95
+13	David	72
+
+17) View students with id 14
+select stuname, stumarks from student WHERE stuid="14";
+
+# Output:
+Elliot	56
+
+18) View students with name Bevin
+select stuid, stumarks from student WHERE stuname="Bevin";
+
+# Output:
+11 64
+
+19) View students with name Clarke
+select * from student WHERE stuname="Clarke";
+
+# Output: #Null since no student with name Clarke
+
+20) Remove student table
+drop table student
+select * from student # error table was dropped
+
+21) External table with location
+create external table item(itemid int, itemname string, itemprice int)
+row format delimited 
+fields terminated by '\t'
+location '/goods/things/articles';
+
+22) Create table item
+cat > item
+10001	ponds	60
+10002	santoor	50
+10003	closeup	45
+10004	pepsi	90
+
+23) Load file
+load data local inpath '/home/cloudera/item'
+overwrite into table item;
+
+24) Description of item
+desc item;
+
+# Output:
+itemid              	int                 	                    
+itemname            	string              	                    
+itemprice           	int  
+
+25) View all items
+select * from item;
+
+# Output:
+10001	ponds	60
+10002	santoor	50
+10003	closeup	45
+10004	pepsi	90
+
+26) Items with price > 50
+select itemid, itemname from item WHERE itemprice>50;
+
+# Output:
+10001	ponds
+10004	pepsi
+
+27) Items with price = 50
+select itemname from item WHERE itemprice=50;
+
+# Output:
+santoor
+
+28) Items with price = 70
+select itemname from item WHERE itemprice=70;
+
+# Output: # NULL since no item exists
+
+29) Remove item table
+drop table item;
+select * from item;
+
+# Output: # removed successfully
+FAILED: SemanticException [Error 10001]: Line 1:14 Table not found 'item'
+
+
+
+
+
